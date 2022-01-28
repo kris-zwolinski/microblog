@@ -1,10 +1,10 @@
 from app import db, login
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
+from flask_login import UserMixin, LoginManager, login_manager
 
 
-class User(UserMixin, db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, index=True, unique=True)
     email = db.Column(db.String, index=True, unique=True)
@@ -19,6 +19,10 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+    @property
+    def is_active(self):
+        return True
 
 
 @login.user_loader
